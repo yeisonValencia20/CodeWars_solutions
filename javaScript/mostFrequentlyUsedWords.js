@@ -25,6 +25,7 @@
 // Avoid creating an array whose memory footprint is roughly as big as the input text.
 // Avoid sorting the entire array of unique words.
 
+// MI CODIGO
 function topThreeWords(text) {
     let frequently = [];
     let top = [];
@@ -44,3 +45,31 @@ function topThreeWords(text) {
 
     return top.slice(0, 3)
 }
+
+// CODIGO CON MEJORES PRACTICAS
+let topThreeWords = text => {
+    let dict = new Map();
+    text.replace(/[A-z']+(?=[ ]+|$)/g, match => {
+        let word = match.toLowerCase();
+        dict.set(word, dict.has(word) ? dict.get(word) + 1 : 1);
+    });
+    dict.delete("'");
+    return [...dict].sort((a, b) => b[1] - a[1]).map(a => a[0]).slice(0, 3);
+};
+
+function topThreeWords(text) {
+    let words = {}
+    text.toLowerCase().replace(/([A-Za-z][A-Za-z']*)/g, match => {
+      let c = words[match] || 0
+      words[match] = ++c
+    })
+    return Object
+            .keys(words)
+            .sort(function(a,b){return words[b]-words[a]})
+            .slice(0,3)
+  }
+
+  const topThreeWords = text => {
+    let total = (text.toLowerCase().match(/\b[a-z']+\b/g)||[]).reduce((acc,cur) => (acc[cur] = (acc[cur]||0) + 1, acc), {});
+    return Object.keys(total).sort((a,b) => total[b] - total[a]).slice(0,3);
+  };
